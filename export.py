@@ -1,10 +1,12 @@
 import csv
 from os import unlink
+from pathlib import Path
+from tkinter import Tk, filedialog
+
 import pylightxl as xl
 import pyzipper
-from tkinter import Tk, filedialog
-from pathlib import Path
-from mypasswords import passwords
+
+from passwords import PASSWORDS
 
 root = Tk()
 root.withdraw()
@@ -13,13 +15,13 @@ BIG_ZIP_PATH = Path("my_zip.zip")
 
 MY_EXCEL_FILE = Path(filedialog.askopenfilename(title="Select the excel file with student names in column A"))
 
-db = xl.readxl(fn=MY_EXCEL_FILE, ws=("Speech"))
+db = xl.readxl(fn=MY_EXCEL_FILE, ws=("Sheet1"))
 
 row_num = 1
 
 big_zip = pyzipper.ZipFile(BIG_ZIP_PATH, mode="w")
 
-for row in db.ws(ws="Speech").rows:
+for row in db.ws(ws="Sheet1").rows:
     if row_num == 1:
         header = row
     else:
@@ -31,7 +33,7 @@ for row in db.ws(ws="Speech").rows:
             writer = csv.writer(f)
             writer.writerow(header)
             writer.writerow(row)
-        password = passwords[student]
+        password = PASSWORDS[student]
         zip_name = student + ".zip"
         with pyzipper.AESZipFile(zip_name, "w", compression=pyzipper.ZIP_LZMA,
                                 encryption=pyzipper.WZ_AES) as myzip:
