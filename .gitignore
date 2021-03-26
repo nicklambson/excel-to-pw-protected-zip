@@ -1,0 +1,6 @@
+
+*.zip
+*.xlsx
+mypasswords.py
+.vscode/settings.json
+__pycache__/mypasswords.cpython-38.pyc
